@@ -1,0 +1,104 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    /** Funções auxiliares definidas para reutilização nas regras **/
+    
+    // Verifica se o usuário é admin do app
+    function isAdmin() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Retorna os dados do perfil do usuário autenticado
+    function getUser() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    // Verifica se é membro (pode visualizar) de uma família
+    function isMember(familyId) {
+      let mRef = /databases/$(database)/documents/families/$(familyId)/members/$(request.auth.uid);
+      return exists(mRef) && get(mRef).data.canView == true;
+    }
+
+    // Verifica se é editor (pode editar) de uma família
+    function isEditor(familyId) {
+      let mRef = /databases/$(database)/documents/families/$(familyId)/members/$(request.auth.uid);
+      return exists(mRef) && get(mRef).data.canEdit == true;
+    }
+
+    // Verifica se é membro de um projeto pessoal
+    function isProjectMember(uid, pid) {
+      let pRef = /databases/$(database)/documents/users/$(uid)/projects/$(pid)/members/$(request.auth.uid);
+      return exists(pRef) && get(pRef).data.canView == true;
+    }
+
+    // Verifica se é editor de um projeto pessoal
+    function isProjectEditor(uid, pid) {
+      let pRef = /databases/$(database)/documents/users/$(uid)/projects/$(pid)/members/$(request.auth.uid);
+      return exists(pRef) && get(pRef).data.canEdit == true;
+    }
+
+    // Permite exclusão de categorias pessoais pelo owner ou de categorias familiares por admin
+    function isCategoryOwnerOrAdmin(data) {
+      return isAdmin() 
+        || (data.scope == 'personal' && data.ownerId == request.auth.uid);
+    }
+
+    // Verifica permissão de leitura de documentos
+    function canReadDocument(data) {
+      return isAdmin()
+        || data.isPublic == true
+        || data.ownerEmail == request.auth.token.email
+        || (request.auth.uid in data.sharedWith);
+    }
+
+    // Verifica se pode ver bills de um projeto
+    function isBillProjectMember(data) {
+      return (data.projectRef.familyId != null && isMember(data.projectRef.familyId))
+        || (data.projectRef.userId != null && isProjectMember(data.projectRef.userId, data.projectRef.projectId));
+    }
+
+    // Verifica se pode editar bills de um projeto
+    function isBillProjectEditor(data) {
+      return (data.projectRef.familyId != null && isEditor(data.projectRef.familyId))
+        || (data.projectRef.userId != null && isProjectEditor(data.projectRef.userId, data.projectRef.projectId));
+    }
+
+    /** Exemplos de uso das funções nas regras de acesso **/
+    
+    match /users/{userId} {
+      allow read: if request.auth.uid == userId || isAdmin();
+      allow write: if request.auth.uid == userId;
+    }
+
+    match /families/{fid}/financialData/{tx} {
+      allow create: if isMember(fid);
+      allow update, delete: if resource.data.userId == request.auth.uid || isEditor(fid);
+    }
+
+    match /users/{uid}/projects/{pid}/financialData/{tx} {
+      allow create: if isProjectMember(uid, pid);
+      allow update, delete: if resource.data.userId == request.auth.uid || isProjectEditor(uid, pid);
+    }
+
+    match /categories/{cid} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow delete: if isCategoryOwnerOrAdmin(resource.data);
+    }
+
+    match /documents/{type}/{docId} {
+      allow read: if canReadDocument(resource.data);
+      allow create: if request.auth != null;
+      allow delete: if resource.data.ownerEmail == request.auth.token.email || isAdmin();
+    }
+
+    match /bills/{bid} {
+      allow read: if isBillProjectMember(resource.data);
+      allow write: if isBillProjectEditor(resource.data);
+    }
+
+    match /logs/{col}/{logId} {
+      allow read, write: if isAdmin();
+    }
+  }
+}
