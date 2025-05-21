@@ -87,7 +87,7 @@
 
 //   return (
 //     <form onSubmit={handleSubmit} className="space-y-4 p-4 bg-white dark:bg-gray-800 rounded-lg">
-//       <div className="flex space-x-2">
+//       <div className="flex flex-col md:flex-row gap-2">
 //         <select value={type} onChange={e => setType(e.target.value as any)} className="p-2 rounded">
 //           <option value="income">Income</option>
 //           <option value="expense">Expense</option>
@@ -113,7 +113,7 @@
 //         </datalist>
 //       </div>
 
-//       <div className="flex space-x-2">
+//       <div className="flex flex-col md:flex-row gap-2">
 //         <select value={currency} onChange={e => setCurrency(e.target.value as any)} className="p-2 rounded">
 //           <option value="EUR">€</option>
 //           <option value="BRL">R$</option>
@@ -149,30 +149,9 @@ import { useCategories } from '../../hooks/useCategories';
 import { useFamily } from '../../contexts/FamilyContext';
 import { useConfirm } from '../../hooks/useConfirm';
 import { getDownloadURL, ref, updateMetadata, uploadBytes } from 'firebase/storage';
+import { TransactionFormProps } from '../../types';
 
-interface Props {
-  path: string;
-  budgetsOfMonth: Array<{
-    id: string;
-    categoryId: string;
-    date: Date | { seconds: number };
-  }>;
-  initialValues?: {
-    id?: string;
-    name?: string;
-    categoryId?: string;
-    categoryName?: string;
-    amount?: number | string;
-    date?: Date | string | { seconds: number };
-    type?: 'income' | 'expense' | 'budget';
-    currency?: 'EUR' | 'BRL';
-    createdAt?: any;
-  };
-  onClose?: () => void;
-  onSaved?: () => void;
-}
-
-export const TransactionForm: React.FC<Props> = ({
+export const TransactionForm: React.FC<TransactionFormProps> = ({
   path,
   budgetsOfMonth,
   initialValues,
@@ -361,7 +340,7 @@ export const TransactionForm: React.FC<Props> = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-4 bg-white dark:bg-gray-800 rounded-lg">
-      <div className="flex space-x-2">
+      <div className="flex md:flex-row gap-2">
         <select value={type} onChange={e => setType(e.target.value as any)} className="p-2 rounded dark:bg-gray-800">
           <option value="income">Entrada</option>
           <option value="expense">Saída</option>
@@ -388,22 +367,26 @@ export const TransactionForm: React.FC<Props> = ({
         </datalist>
       </div>
 
-      <div className="flex space-x-2">
-        <select value={currency} onChange={e => setCurrency(e.target.value as any)} className="p-2 rounded dark:bg-gray-800">
-          <option value="EUR">€</option>
-          <option value="BRL">R$</option>
-        </select>
-        <input type="number" step="0.01" placeholder="Amount" value={amount} onChange={e => setAmount(e.target.value)} className="p-2 rounded" required />
-        <input
-          type="date"
-          value={date}
-          onChange={e => setDate(e.target.value)}
-          onKeyDown={e => e.preventDefault()}
-          onFocus={e => e.currentTarget.showPicker?.()}
-          className="custom-date-picker bg-transparent placeholder-gray-400 dark:placeholder-white rounded p-2 cursor-pointer focus:outline-none"
-          placeholder="dd/mm/yyyy"
-          required
-        />
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex w-full items-end gap-2">
+          <select value={currency} onChange={e => setCurrency(e.target.value as any)} className="p-2 rounded dark:bg-gray-800">
+            <option value="EUR">€</option>
+            <option value="BRL">R$</option>
+          </select>
+          <input type="number" step="0.01" placeholder="Amount" value={amount} onChange={e => setAmount(e.target.value)} className="flex w-full p-2 rounded" required />
+        </div>
+        <div className="flex flex-col md:flex-row">
+          <input
+            type="date"
+            value={date}
+            onChange={e => setDate(e.target.value)}
+            onKeyDown={e => e.preventDefault()}
+            onFocus={e => e.currentTarget.showPicker?.()}
+            className="custom-date-picker bg-transparent placeholder-gray-400 dark:placeholder-white rounded p-2 cursor-pointer focus:outline-none"
+            placeholder="dd/mm/yyyy"
+            required
+          />
+        </div>
       </div>
 
       <div>
@@ -429,7 +412,7 @@ export const TransactionForm: React.FC<Props> = ({
 
       <div className="flex gap-2">
         <button type="submit" className="w-full p-2 bg-primary text-white rounded" disabled={catLoading}>
-          {initialValues?.id ? 'Salvar' : 'Add Transaction'}
+          {initialValues?.id ? 'Salvar' : 'Adicionar'}
         </button>
         {onClose && (
           <button type="button" className="w-full p-2 bg-gray-300 dark:bg-gray-700 rounded" onClick={onClose}>

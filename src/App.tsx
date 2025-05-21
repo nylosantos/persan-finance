@@ -7,11 +7,15 @@ import { AppRoutes } from './routes/AppRoutes';
 function App() {
   const { user } = useAuth();
   return (
-    <>
-      {user && <Header />}
-      {/* Aqui podemos adicionar um Layout global (Header, Sidebar, etc.) */}
+    <div className='flex flex-col m-0 items-center'>
+      {user && (
+        <>
+          <Header />
+          <div className="h-20" /> {/* Ajuste a altura conforme o padding do header */}
+        </>
+      )}
       <AppRoutes />
-    </>
+    </div>
   );
 }
 

@@ -18,12 +18,14 @@ export default function ThemeSelector() {
     return (
         <div
             onClick={toggleTheme}
-            className="absolute right-4 top-1/2 -translate-y-1/2 md:top-4 md:translate-y-0 flex items-center gap-2 px-4 py-2 bg-gray-300 dark:bg-gray-800 hover:bg-gray-300/60 dark:hover:bg-gray-800/60 text-gray-800 dark:text-gray-200 rounded-lg shadow-md cursor-pointer transition duration-200"
+            className="flex items-center gap-4 px-4 py-2 bg-gray-300 dark:bg-gray-800 hover:bg-gray-300/60 dark:hover:bg-gray-800/60 text-gray-800 dark:text-gray-200 rounded-lg shadow-md cursor-pointer transition duration-200"
         >
-            {darkMode ? '🌙' : '☀️'}
-            <span className="hidden md:inline">
+            <p>
+                {darkMode ? '🌙' : '☀️'}
+            </p>
+            <p>
                 {darkMode ? 'Dark' : 'Light'}
-            </span>
+            </p>
         </div>
     );
 }

@@ -65,81 +65,83 @@ export const MonthYearPicker: React.FC<MonthYearPickerProps> = ({
     for (let y = min; y <= max; y++) years.push(y);
 
     return (
-        <div className={`flex items-center gap-2 relative ${className}`}>
-            <button
-                className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
-                onClick={handlePrev}
-                aria-label="Mês anterior"
-                type="button"
-            >
-                <FiChevronLeft />
-            </button>
-            <div className="flex items-center gap-1">
-                <div ref={monthRef} className="relative">
-                    <div
-                        className="font-bold text-lg px-6 py-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center cursor-pointer"
-                        onClick={() => setShowMonthPicker(v => !v)}
-                        aria-label="Selecionar mês"
+        <div className='flex w-full justify-center items-center'>
+            <div className={`flex w-full max-w-xl items-center gap-2 relative ${className}`}>
+                <button
+                    className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+                    onClick={handlePrev}
+                    aria-label="Mês anterior"
+                    type="button"
+                >
+                    <FiChevronLeft />
+                </button>
+                <div className="flex items-center gap-1">
+                    <div ref={monthRef} className="relative">
+                        <div
+                            className="font-bold text-lg px-6 py-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center cursor-pointer"
+                            onClick={() => setShowMonthPicker(v => !v)}
+                            aria-label="Selecionar mês"
                         // type="div"
-                    >
-                        {MONTHS[month]}
-                        {/* <FiChevronDown className="ml-1" /> */}
-                    </div>
-                    {showMonthPicker && (
-                        <div className="absolute z-20 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded shadow mt-1 left-0">
-                            {MONTHS.map((name, idx) => (
-                                <div
-                                    key={name}
-                                    className={`block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer ${idx === month ? 'font-bold bg-gray-100 dark:bg-gray-700' : ''}`}
-                                    onClick={() => {
-                                        onChange(idx, year);
-                                        setShowMonthPicker(false);
-                                    }}
-                                    // type="div"
-                                >
-                                    {name}
-                                </div>
-                            ))}
+                        >
+                            {MONTHS[month]}
+                            {/* <FiChevronDown className="ml-1" /> */}
                         </div>
-                    )}
-                </div>
-                <div ref={yearRef} className="relative">
-                    <div
-                        className="font-bold text-lg px-6 py-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center cursor-pointer"
-                        onClick={() => setShowYearPicker(v => !v)}
-                        aria-label="Selecionar ano"
+                        {showMonthPicker && (
+                            <div className="absolute z-20 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded shadow mt-1 left-0">
+                                {MONTHS.map((name, idx) => (
+                                    <div
+                                        key={name}
+                                        className={`block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer ${idx === month ? 'font-bold bg-gray-100 dark:bg-gray-700' : ''}`}
+                                        onClick={() => {
+                                            onChange(idx, year);
+                                            setShowMonthPicker(false);
+                                        }}
+                                    // type="div"
+                                    >
+                                        {name}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                    <div ref={yearRef} className="relative">
+                        <div
+                            className="font-bold text-lg px-6 py-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center cursor-pointer"
+                            onClick={() => setShowYearPicker(v => !v)}
+                            aria-label="Selecionar ano"
                         // type="div"0
-                    >
-                        {year}
-                        {/* <FiChevronDown className="ml-1" /> */}
-                    </div>
-                    {showYearPicker && (
-                        <div className="absolute z-20 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded shadow mt-1 left-0">
-                            {years.map(y => (
-                                <div
-                                    key={y}
-                                    className={`block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer ${y === year ? 'font-bold bg-gray-100 dark:bg-gray-700' : ''}`}
-                                    onClick={() => {
-                                        onChange(month, y);
-                                        setShowYearPicker(false);
-                                    }}
-                                    // type="div"
-                                >
-                                    {y}
-                                </div>
-                            ))}
+                        >
+                            {year}
+                            {/* <FiChevronDown className="ml-1" /> */}
                         </div>
-                    )}
+                        {showYearPicker && (
+                            <div className="absolute z-20 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded shadow mt-1 left-0">
+                                {years.map(y => (
+                                    <div
+                                        key={y}
+                                        className={`block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer ${y === year ? 'font-bold bg-gray-100 dark:bg-gray-700' : ''}`}
+                                        onClick={() => {
+                                            onChange(month, y);
+                                            setShowYearPicker(false);
+                                        }}
+                                    // type="div"
+                                    >
+                                        {y}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
+                <button
+                    className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+                    onClick={handleNext}
+                    aria-label="Próximo mês"
+                    type="button"
+                >
+                    <FiChevronRight />
+                </button>
             </div>
-            <button
-                className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
-                onClick={handleNext}
-                aria-label="Próximo mês"
-                type="button"
-            >
-                <FiChevronRight />
-            </button>
         </div>
     );
 };

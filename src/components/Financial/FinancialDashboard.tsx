@@ -11,10 +11,8 @@ export const FinancialDashboard: React.FC<Props> = ({ familyId }) => {
     if (loading) return <p>Loading charts...</p>;
 
     return (
-        <div className="p-4">
-            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">Finance Overview</h2>
-
-            <div className="w-full h-72 bg-white dark:bg-gray-800 p-4 rounded shadow">
+        <div className="flex flex-col w-full py-2">
+            <div className="flex flex-col w-full h-72 bg-white dark:bg-gray-800 p-4 rounded shadow">
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={data}>
                         <XAxis dataKey="month" />

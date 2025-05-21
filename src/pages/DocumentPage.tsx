@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { DocumentUpload } from '../components/Documents/DocumentUpload';
 import { DocumentList } from '../components/Documents/DocumentList';
+import { Container } from '../components/Layout/Container';
 
 const VALID_TYPES = ['personal', 'invoices', 'receipts'] as const;
 type DocType = typeof VALID_TYPES[number];
@@ -15,18 +16,20 @@ export const DocumentPage: React.FC = () => {
     const docType = type as DocType;
 
     return (
-        <div className="p-4 space-y-6">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {docType === 'personal' ? 'Documentos Pessoais' :
-                    docType === 'invoices' ? 'Notas Fiscais' :
-                        'Receipts'}
-            </h1>
+        <Container>
+            <div className="p-2 space-y-6">
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                    {docType === 'personal' ? 'Documentos Pessoais' :
+                        docType === 'invoices' ? 'Notas Fiscais' :
+                            'Receipts'}
+                </h1>
 
-            {/* Formulário de upload */}
-            <DocumentUpload />
+                {/* Formulário de upload */}
+                <DocumentUpload />
 
-            {/* Listagem filtrada pelo tipo */}
-            <DocumentList type={docType} />
-        </div>
+                {/* Listagem filtrada pelo tipo */}
+                <DocumentList type={docType} />
+            </div>
+        </Container>
     );
 };

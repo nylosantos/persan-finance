@@ -1,5 +1,5 @@
 // src/components/Financial/MonthlyView.tsx
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { where, orderBy, Timestamp, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { useFirestoreCollection } from '../../hooks/useFirestoreCollection';
 import { useExchangeRate } from '../../hooks/useExchangeRate';
@@ -14,6 +14,15 @@ import { MonthYearPicker } from '../Layout/MonthYearPicker';
 import { TransactionOptions } from './TransactionOptions';
 import { useBudgetsOfMonth } from '../../hooks/useBudgetsOfMonth';
 import { useCategories } from '../../hooks/useCategories';
+import { TransactionPaymentModal } from './TransactionPaymentModal';
+import { TransactionEditModal } from './TransactionEditModal';
+import { TotalsSummary } from '../Layout/TotalsSummary';
+import { TransactionFilters } from '../Layout/TransactionFilters';
+import { TransactionFiltersDrawer } from '../Layout/TransactionFiltersDrawer';
+import { FiFilter } from 'react-icons/fi';
+import { FaFilter } from 'react-icons/fa';
+import { TransactionFormDrawerCard } from './TransactionFormDrawerCard';
+import { Container } from '../Layout/Container';
 
 export const MonthlyView: React.FC = () => {
     // const { user } = useAuth();
@@ -24,7 +33,6 @@ export const MonthlyView: React.FC = () => {
 
     const [editingTx, setEditingTx] = useState<Transaction | null>(null);
     const [payingTx, setPayingTx] = useState<Transaction | null>(null);
-    // const [payDate, setPayDate] = useState(() => new Date().toISOString().split('T')[0]);
 
     // Estado para toggle de moeda nos totais: 'EUR' ou 'BRL'
     const [viewCurrency, setViewCurrency] = useState<'EUR' | 'BRL'>('EUR');
@@ -236,9 +244,17 @@ export const MonthlyView: React.FC = () => {
 
     const [expandedBudget, setExpandedBudget] = useState<string | null>(null);
 
+    const [drawerOpen, setDrawerOpen] = useState(false);
+
+    // Verifica se algum filtro está ativo
+    const filtrosAtivos = useMemo(
+        () => !!(filterDate || filterName || filterCategory),
+        [filterDate, filterName, filterCategory]
+    );
+
     return (
-        <div className="p-4">
-            {
+        <Container>
+            {/* {
                 editingTx && (
                     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40">
                         <div className="bg-white dark:bg-gray-800 rounded p-6 shadow-lg min-w-[320px]">
@@ -253,100 +269,56 @@ export const MonthlyView: React.FC = () => {
                         </div>
                     </div>
                 )
-            }
+            } */}
 
-            {
-                payingTx && (
-                    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40">
-                        <div className="bg-white dark:bg-gray-800 rounded p-6 shadow-lg min-w-[320px]">
-                            <h2 className="mb-4 text-lg font-bold">Confirmar Pagamento</h2>
-                            <p>Deseja marcar <b>{payingTx.name}</b> como pago?</p>
-                            <label className="block mt-4 mb-2">Data do pagamento:</label>
-                            <input
-                                type="date"
-                                max={new Date().toISOString().split('T')[0]}
-                                value={
-                                    payingTx.paidAt
-                                        ? new Date(payingTx.paidAt.toDate()).toISOString().split('T')[0]
-                                        : new Date().toISOString().split('T')[0]
-                                }
-                                onChange={e =>
-                                    setPayingTx(prev => prev && { ...prev, paidAt: Timestamp.fromDate(new Date(e.target.value)) })
-                                }
-                                className="border rounded px-2 py-1"
-                            />
-                            <label className="block mt-4 mb-2">Valor do pagamento:</label>
-                            <div className='flex items-center gap-2'>
-                                <select
-                                    value={payingTx.currency}
-                                    onChange={e =>
-                                        setPayingTx(prev => prev && { ...prev, currency: e.target.value as 'EUR' | 'BRL' })
-                                    }
-                                    className="p-2 rounded dark:bg-gray-800"
-                                >
-                                    <option value="EUR">€</option>
-                                    <option value="BRL">R$</option>
-                                </select>
-                                <input
-                                    type="number"
-                                    step="0.01"
-                                    placeholder="Amount"
-                                    value={payingTx.amount}
-                                    onChange={e =>
-                                        setPayingTx(prev => prev && { ...prev, amount: parseFloat(e.target.value) })
-                                    }
-                                    className="p-2 rounded"
-                                    required
-                                />
-                            </div>
-                            <div className="flex gap-2 mt-6">
-                                <button
-                                    className="bg-primary text-white px-4 py-2 rounded"
-                                    onClick={async () => {
-                                        try {
-                                            await updateDoc(doc(db, path, payingTx.id), {
-                                                paid: true,
-                                                paidAt: payingTx.paidAt || new Date(),
-                                                amount: payingTx.amount,
-                                                currency: payingTx.currency,
-                                            });
-                                            setPayingTx(null);
-                                        } catch (err) {
-                                            alert('Erro ao marcar como pago');
-                                        }
-                                    }}
-                                >
-                                    Confirmar
-                                </button>
-                                <button className="px-4 py-2 rounded" onClick={() => setPayingTx(null)}>
-                                    Cancelar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )
-            }
+            <TransactionEditModal
+                open={!!editingTx}
+                transaction={editingTx}
+                budgetsOfMonth={budgets}
+                path={path}
+                onClose={() => setEditingTx(null)}
+                onSaved={() => setEditingTx(null)}
+            />
+
+            <TransactionPaymentModal
+                open={!!payingTx}
+                transaction={payingTx}
+                onClose={() => setPayingTx(null)}
+                onConfirm={async (data) => {
+                    await updateDoc(doc(db, path, payingTx!.id), data);
+                    setPayingTx(null);
+                }}
+            />
 
             {familyId !== '' &&
                 <>
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 pb-6">Registro Mensal</h1>
 
                     {/* Formulário para nova transação */}
-                    <TransactionForm path={path} budgetsOfMonth={budgets} />
+                    <TransactionFormDrawerCard path={path} budgetsOfMonth={budgets} />
                     {/* Selecione o mês e ano */}
-                    <div className="flex items-center space-x-4 mt-4">
-                        <MonthYearPicker
-                            month={selectedMonth}
-                            year={selectedYear}
-                            onChange={(m, y) => {
-                                setSelectedMonth(m);
-                                setSelectedYear(y);
-                            }}
-                            className='w-full justify-between'
-                        />
-                    </div>
+                    <MonthYearPicker
+                        month={selectedMonth}
+                        year={selectedYear}
+                        onChange={(m, y) => {
+                            setSelectedMonth(m);
+                            setSelectedYear(y);
+                        }}
+                        className='justify-between mt-4'
+                    />
+
                     {/* Totais do mês com toggle de moeda */}
-                    {!loading && (
+                    <TotalsSummary
+                        totalIncome={viewCurrency === 'EUR' ? totalIncomeEUR : totalIncomeBRL}
+                        totalExpense={viewCurrency === 'EUR' ? totalExpenseEUR : totalExpenseBRL}
+                        balance={viewCurrency === 'EUR' ? balanceEUR : balanceBRL}
+                        totalPaid={totalPaid}
+                        totalToPay={totalToPay}
+                        viewCurrency={viewCurrency}
+                        onToggleCurrency={() => setViewCurrency(viewCurrency === 'EUR' ? 'BRL' : 'EUR')}
+                        fmt={fmt}
+                    />
+                    {/* {!loading && (
                         <div className="flex justify-between items-center mt-6 p-4 bg-gray-200 dark:bg-gray-800 rounded">
                             <p>Entrada: {fmt(viewCurrency === 'EUR' ? totalIncomeEUR : totalIncomeBRL, viewCurrency)}</p>
                             <p>Saída: {fmt(viewCurrency === 'EUR' ? totalExpenseEUR : totalExpenseBRL, viewCurrency)}</p>
@@ -364,24 +336,24 @@ export const MonthlyView: React.FC = () => {
                                 Ver em {viewCurrency === 'EUR' ? 'R$' : '€'}
                             </button>
                         </div>
-                    )}
-
-                    <div className="flex w-full items-center justify-center gap-2 my-4">
-                        <div
-                            className={`px-3 py-1 rounded ${listType === 'expenses' ? 'bg-primary text-white cursor-default' : 'bg-gray-200 dark:bg-gray-700 cursor-pointer'}`}
-                            onClick={() => setListType('expenses')}
-                        >
-                            Despesas
+                    )} */}
+                    <div className='flex w-full md:flex-col items-center justify-between mt-2 md:mt-0'>
+                        <div className="flex w-full items-center justify-center gap-2 my-4">
+                            <div
+                                className={`px-3 py-1 rounded ${listType === 'expenses' ? 'bg-primary text-white cursor-default' : 'bg-gray-200 dark:bg-gray-700 cursor-pointer'}`}
+                                onClick={() => setListType('expenses')}
+                            >
+                                Despesas
+                            </div>
+                            <div
+                                className={`px-3 py-1 rounded ${listType === 'incomes' ? 'bg-primary text-white cursor-default' : 'bg-gray-200 dark:bg-gray-700 cursor-pointer'}`}
+                                onClick={() => setListType('incomes')}
+                            >
+                                Receitas
+                            </div>
                         </div>
-                        <div
-                            className={`px-3 py-1 rounded ${listType === 'incomes' ? 'bg-primary text-white cursor-default' : 'bg-gray-200 dark:bg-gray-700 cursor-pointer'}`}
-                            onClick={() => setListType('incomes')}
-                        >
-                            Receitas
-                        </div>
-                    </div>
 
-                    <div className="flex flex-wrap gap-2 mb-4">
+                        {/* <div className="flex flex-wrap gap-2 mb-4">
                         <input
                             type="date"
                             value={filterDate}
@@ -415,6 +387,69 @@ export const MonthlyView: React.FC = () => {
                         >
                             Limpar
                         </button>
+                    </div> */}
+
+                        {/* <TransactionFilters
+                        filterDate={filterDate}
+                        setFilterDate={setFilterDate}
+                        filterName={filterName}
+                        setFilterName={setFilterName}
+                        filterCategory={filterCategory}
+                        setFilterCategory={setFilterCategory}
+                        categories={categories}
+                        clearFilters={clearFilters}
+                    /> */}
+                        <div className="flex flex-col w-full">
+                            {/* Desktop */}
+                            <div className="hidden md:block flex flex-col w-full ">
+                                <TransactionFilters
+                                    filterDate={filterDate}
+                                    setFilterDate={setFilterDate}
+                                    filterName={filterName}
+                                    setFilterName={setFilterName}
+                                    filterCategory={filterCategory}
+                                    setFilterCategory={setFilterCategory}
+                                    categories={categories}
+                                    clearFilters={clearFilters}
+                                />
+                            </div>
+                            {/* Mobile */}
+                            <div className="flex md:hidden justify-end">
+                                <button
+                                    className="flex items-center gap-2 px-3 py-2 rounded bg-primary text-white"
+                                    onClick={() => {
+                                        if (filtrosAtivos) {
+                                            clearFilters();
+                                        } else {
+                                            setDrawerOpen(true);
+                                        }
+                                    }}
+                                >
+                                    {filtrosAtivos ? (
+                                        <>
+                                            <FaFilter /> Limpar filtros
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FiFilter /> Filtrar
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                            <TransactionFiltersDrawer
+                                open={drawerOpen}
+                                onClose={() => setDrawerOpen(false)}
+                                onApply={() => setDrawerOpen(false)}
+                                filterDate={filterDate}
+                                setFilterDate={setFilterDate}
+                                filterName={filterName}
+                                setFilterName={setFilterName}
+                                filterCategory={filterCategory}
+                                setFilterCategory={setFilterCategory}
+                                categories={categories}
+                                clearFilters={clearFilters}
+                            />
+                        </div>
                     </div>
 
                     {/* Lista de transações com hover para conversão */}
@@ -422,7 +457,7 @@ export const MonthlyView: React.FC = () => {
                         <p>Loading...</p>
                     ) : (
                         listType === 'expenses' ? (
-                            <ul className="mt-4 space-y-2">
+                            <ul className="mt-2 space-y-2">
                                 {/* Budgets do mês/ano selecionado */}
                                 {budgets.map(budget => {
                                     // Extrai mês/ano do budget
@@ -547,8 +582,10 @@ export const MonthlyView: React.FC = () => {
                                                                 <div
                                                                     className="flex w-full justify-between items-center pr-2"
                                                                 >
-                                                                    <div className='flex w-fit items-center gap-4'>
-                                                                        <span className="font-semibold">{exp.date.toDate().toLocaleDateString()}</span>
+                                                                    <div className='flex w-fit items-center gap-2'>
+                                                                        <span className="font-semibold">
+                                                                            {exp.date.toDate().toLocaleDateString(undefined, { day: '2-digit', month: '2-digit' })}
+                                                                        </span>
                                                                         <span className="font-semibold">{exp.name}</span>
                                                                     </div>
                                                                     {/* <span>{exp.name}</span> */}
@@ -613,12 +650,12 @@ export const MonthlyView: React.FC = () => {
                                     return (
                                         <li
                                             key={id}
-                                            className="flex justify-between items-center p-2 bg-gray-100 dark:bg-gray-700 rounded"
+                                            className="flex justify-between items-center p-2 bg-gray-100 dark:bg-gray-700 rounded gap-2"
                                             onMouseEnter={() => setHoveredTx(id)}
                                             onMouseLeave={() => setHoveredTx(null)}
                                         >
-                                            <div className='flex w-fit items-center gap-4'>
-                                                <span className={`${tx.paid && 'text-green-700 dark:text-green-400'}`}>{tx.date.toDate().toLocaleDateString()}</span>
+                                            <div className='flex w-fit items-center gap-2'>
+                                                <span className={`${tx.paid && 'text-green-700 dark:text-green-400'}`}>{tx.date.toDate().toLocaleDateString(undefined, { day: '2-digit', month: '2-digit' })}</span>
                                                 <span className={`${tx.paid && 'text-green-700 dark:text-green-400'}`}>{tx.name}</span>
                                             </div>
                                             {/* <span className={`${tx.paid && 'text-green-700 dark:text-green-400'}`}>{tx.name}</span> */}
@@ -675,7 +712,7 @@ export const MonthlyView: React.FC = () => {
                                             onMouseLeave={() => setHoveredTx(null)}
                                         >
                                             <div className='flex w-fit items-center gap-4'>
-                                                <span className="font-semibold">{tx.date.toDate().toLocaleDateString()}</span>
+                                                <span className="font-semibold">{tx.date.toDate().toLocaleDateString(undefined, { day: '2-digit', month: '2-digit' })}</span>
                                                 <span className="font-semibold">{tx.name}</span>
                                             </div>
                                             <div className="flex items-center space-x-2">
@@ -708,6 +745,6 @@ export const MonthlyView: React.FC = () => {
                         )
                     )}
                 </>}
-        </div>
+        </Container>
     );
 };

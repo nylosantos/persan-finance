@@ -11,7 +11,7 @@
 }
 
 :root {
-  @apply text-gray-900 dark:text-gray-100;
+  @apply text-gray-900 dark:text-gray-100 m-0 p-0;
   @apply bg-gray-100 dark:bg-gray-900;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -26,12 +26,7 @@
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: start;
-  @apply justify-center;
-  min-width: 320px;
-  min-height: 100vh;
+  @apply flex-1 justify-center m-0 p-0 w-screen items-start min-h-screen;
 }
 
 h1 {
@@ -114,4 +109,11 @@ textarea {
   button {
     background-color: #f9f9f9;
   }
+}
+
+body.drawer-open {
+  position: fixed;
+  width: 100vw;
+  overflow: hidden;
+  touch-action: none;
 }

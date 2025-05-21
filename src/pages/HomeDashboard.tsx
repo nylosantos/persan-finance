@@ -7,6 +7,8 @@ import { MonthYearPicker } from '../components/Layout/MonthYearPicker';
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import { useExchangeRate } from '../hooks/useExchangeRate';
+import { TotalsSummary } from '../components/Layout/TotalsSummary';
+import { Container } from '../components/Layout/Container';
 
 const COLORS = ['#4ade80', '#f87171', '#60a5fa', '#fbbf24', '#a78bfa', '#f472b6', '#34d399', '#facc15', '#818cf8', '#fb7185'];
 
@@ -292,24 +294,32 @@ export const HomeDashboard: React.FC = () => {
     }
 
     return (
-        <div className="p-4">
+        <Container>
             <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Resumo Geral</h1>
 
             {/* Selecione o mês e ano */}
-            <div className="flex items-center space-x-4 mt-4">
-                <MonthYearPicker
-                    month={selectedMonth}
-                    year={selectedYear}
-                    onChange={(m, y) => {
-                        setSelectedMonth(m);
-                        setSelectedYear(y);
-                    }}
-                    className="w-full justify-between"
-                />
-            </div>
+            <MonthYearPicker
+                month={selectedMonth}
+                year={selectedYear}
+                onChange={(m, y) => {
+                    setSelectedMonth(m);
+                    setSelectedYear(y);
+                }}
+                className="w-full justify-between mt-4"
+            />
 
             {/* Totais do mês */}
-            <div className="flex justify-between items-center mt-6 p-4 bg-gray-200 dark:bg-gray-800 rounded">
+            <TotalsSummary
+                totalIncome={viewCurrency === 'EUR' ? totalIncomeEUR : totalIncomeBRL}
+                totalExpense={viewCurrency === 'EUR' ? totalExpenseEUR : totalExpenseBRL}
+                balance={viewCurrency === 'EUR' ? balanceEUR : balanceBRL}
+                totalPaid={totalPaid}
+                totalToPay={totalToPay}
+                viewCurrency={viewCurrency}
+                onToggleCurrency={() => setViewCurrency(viewCurrency === 'EUR' ? 'BRL' : 'EUR')}
+                fmt={fmt}
+            />
+            {/* <div className="flex justify-between items-center mt-6 p-4 bg-gray-200 dark:bg-gray-800 rounded">
                 <p>
                     Entrada:{' '}
                     {fmt(
@@ -343,7 +353,7 @@ export const HomeDashboard: React.FC = () => {
                 >
                     Ver em {viewCurrency === 'EUR' ? 'R$' : '€'}
                 </button>
-            </div>
+            </div> */}
 
             {/* Gráfico de entradas/saídas */}
             <div className="w-full h-72 bg-white dark:bg-gray-800 p-4 rounded shadow mt-8">
@@ -391,6 +401,6 @@ export const HomeDashboard: React.FC = () => {
                     </div>
                 </div>
             )}
-        </div>
+        </Container>
     );
 };

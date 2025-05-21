@@ -67,13 +67,23 @@ export const TransactionOptions: React.FC<TransactionOptionsProps> = ({
                     >
                         <FiEdit className="mr-2" /> Editar
                     </button>
-                    {!hidePay && onPay && <button
-                        className="flex items-center w-full px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
-                        onClick={() => { setOpen(false); onPay(); }}
-                        type="button"
-                    >
-                        <FiCheckCircle className="mr-2" /> Pagar
-                    </button>}
+                    {!hidePay && onPay && (
+                        <button
+                            className="flex items-center w-full px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                            onClick={() => { setOpen(false); onPay(); }}
+                            type="button"
+                        >
+                            {transaction.paid ? (
+                                <>
+                                    <FiTrash2 className="mr-2" /> Estornar
+                                </>
+                            ) : (
+                                <>
+                                    <FiCheckCircle className="mr-2" /> Pagar
+                                </>
+                            )}
+                        </button>
+                    )}
                     <button
                         className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
                         onClick={() => { setOpen(false); onDelete(); }}
