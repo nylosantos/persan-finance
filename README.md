@@ -53,11 +53,3 @@ export default tseslint.config({
 })
 ```
 
-
-
-Criar opçao de data de pagamento.
-
-Ao pagar, vem com a data do dia que esta sendo modificado com opçao de trocar a data.
-
-Ao fazer o submit, a data de vencimento deve ser comparada à data de pagamento, e ai o registro fica atrelado ao mes da data de pagamento nao de vencimento.
-
