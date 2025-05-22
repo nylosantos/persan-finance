@@ -3,7 +3,6 @@ import React, { useMemo, useState } from 'react';
 import { where, orderBy, Timestamp, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { useFirestoreCollection } from '../../hooks/useFirestoreCollection';
 import { useExchangeRate } from '../../hooks/useExchangeRate';
-import { TransactionForm } from './TransactionForm';
 // import { useCategories } from '../../hooks/useCategories';
 // import { useAuth } from '../../contexts/AuthContext';
 import { Transaction } from '../../types';
@@ -557,6 +556,9 @@ export const MonthlyView: React.FC = () => {
                                                                 }
                                                             }
                                                         });
+                                                        if (ok === !true) {
+                                                            console.log('ok', ok, budgetsLoading);
+                                                        }
                                                         // Não precisa de if (ok), pois a deleção já ocorre no onConfirm
                                                     }}
                                                 />

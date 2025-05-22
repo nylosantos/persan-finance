@@ -11,9 +11,7 @@ import {
     query,
     collectionGroup,
     where,
-    getDoc,
-    documentId,
-    DocumentData,
+    getDoc, DocumentData
 } from 'firebase/firestore';
 
 /**

@@ -2,7 +2,7 @@
 // Hook para agregar valores por categoria em um mês específico
 
 import { useEffect, useState } from 'react';
-import { where, orderBy, Timestamp, query, collection } from 'firebase/firestore';
+import { where, Timestamp, query, collection } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import { Transaction } from '../types';
 import { useCategories } from './useCategories';

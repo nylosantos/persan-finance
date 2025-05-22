@@ -5,9 +5,7 @@ import {
     addDoc,
     query,
     where,
-    getDocs,
-    DocumentData,
-    Timestamp,
+    getDocs, Timestamp,
     updateDoc
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, updateMetadata } from 'firebase/storage';

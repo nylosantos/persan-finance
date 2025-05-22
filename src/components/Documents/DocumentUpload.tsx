@@ -1,6 +1,6 @@
 // src/components/Documents/DocumentUpload.tsx
 import React, { useEffect, useRef, useState } from 'react';
-import { uploadDocument, DocumentMeta } from '../../services/documents';
+import { uploadDocument } from '../../services/documents';
 import { Timestamp } from 'firebase/firestore';
 import { useAuth } from '../../contexts/AuthContext';
 import { useParams } from 'react-router-dom';

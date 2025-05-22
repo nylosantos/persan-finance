@@ -1,19 +1,16 @@
-// src/components/Financial/MonthlyView.tsx
 import React, { useState } from 'react';
 import { where, orderBy, Timestamp, deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { useFirestoreCollection } from '../../hooks/useFirestoreCollection';
-import { useExchangeRate } from '../../hooks/useExchangeRate';
-import { TransactionForm } from './TransactionForm';
-// import { useCategories } from '../../hooks/useCategories';
-// import { useAuth } from '../../contexts/AuthContext';
-import { Transaction } from '../../types';
-import { useFamily } from '../../contexts/FamilyContext';
-import { db } from '../../services/firebase';
-import { useConfirm } from '../../hooks/useConfirm';
-import { MonthYearPicker } from '../Layout/MonthYearPicker';
-import { TransactionOptions } from './TransactionOptions';
-import { useBudgetsOfMonth } from '../../hooks/useBudgetsOfMonth';
-import { useCategories } from '../../hooks/useCategories';
+import { useConfirm } from './hooks/useConfirm';
+import { useFamily } from './contexts/FamilyContext';
+import { useCategories } from './hooks/useCategories';
+import { useBudgetsOfMonth } from './hooks/useBudgetsOfMonth';
+import { useFirestoreCollection } from './hooks/useFirestoreCollection';
+import { useExchangeRate } from './hooks/useExchangeRate';
+import { Transaction } from './types';
+import { TransactionForm } from './components/Financial/TransactionForm';
+import { db } from './services/firebase';
+import { MonthYearPicker } from './components/Layout/MonthYearPicker';
+import { TransactionOptions } from './components/Financial/TransactionOptions';
 
 export const MonthlyView: React.FC = () => {
     // const { user } = useAuth();
@@ -529,6 +526,8 @@ export const MonthlyView: React.FC = () => {
                                                                 }
                                                             }
                                                         });
+                                                        ok;
+                                                        budgetsLoading;
                                                         // Não precisa de if (ok), pois a deleção já ocorre no onConfirm
                                                     }}
                                                 />
