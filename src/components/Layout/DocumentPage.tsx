@@ -1,7 +1,9 @@
 import React from 'react';
-import { useParams, Navigate } from 'react-router-dom';
-import { DocumentUpload } from '../Documents/DocumentUpload';
+
+import { Navigate, useParams } from 'react-router-dom';
+
 import { DocumentList } from '../Documents/DocumentList';
+import { DocumentUpload } from '../Documents/DocumentUpload';
 
 const VALID_TYPES = ['personal', 'invoices', 'receipts'] as const;
 type DocType = typeof VALID_TYPES[number];

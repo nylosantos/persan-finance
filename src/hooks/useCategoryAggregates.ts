@@ -1,13 +1,11 @@
-// src/hooks/useCategoryAggregates.ts
-// Hook para agregar valores por categoria em um mês específico
-
 import { useEffect, useState } from 'react';
-import { where, Timestamp, query, collection } from 'firebase/firestore';
-import { db } from '../services/firebase';
-import { Transaction } from '../types';
-import { useCategories } from './useCategories';
-import { getDocs } from 'firebase/firestore';
 
+import { getDocs } from 'firebase/firestore';
+import { collection, query, Timestamp, where } from 'firebase/firestore';
+
+import { Transaction } from '../types';
+import { db } from '../services/firebase';
+import { useCategories } from './useCategories';
 
 interface CategoryAggregate {
     categoryId: string;

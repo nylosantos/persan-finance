@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { where, orderBy, Timestamp, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+
+import { deleteDoc, doc, orderBy, Timestamp, updateDoc, where } from 'firebase/firestore';
+
+import { Transaction } from './types';
+import { db } from './services/firebase';
 import { useConfirm } from './hooks/useConfirm';
 import { useFamily } from './contexts/FamilyContext';
 import { useCategories } from './hooks/useCategories';
-import { useBudgetsOfMonth } from './hooks/useBudgetsOfMonth';
-import { useFirestoreCollection } from './hooks/useFirestoreCollection';
 import { useExchangeRate } from './hooks/useExchangeRate';
-import { Transaction } from './types';
-import { TransactionForm } from './components/Financial/TransactionForm';
-import { db } from './services/firebase';
+import { useBudgetsOfMonth } from './hooks/useBudgetsOfMonth';
 import { MonthYearPicker } from './components/Layout/MonthYearPicker';
+import { useFirestoreCollection } from './hooks/useFirestoreCollection';
+import { TransactionForm } from './components/Financial/TransactionForm';
 import { TransactionOptions } from './components/Financial/TransactionOptions';
 
 export const MonthlyView: React.FC = () => {
@@ -44,7 +46,7 @@ export const MonthlyView: React.FC = () => {
     const now = new Date();
     const [selectedMonth, setSelectedMonth] = useState(now.getMonth());
     const [selectedYear, setSelectedYear] = useState(now.getFullYear());
-    const { budgets, loading: budgetsLoading } = useBudgetsOfMonth(path, selectedYear, selectedMonth);
+    const { budgets } = useBudgetsOfMonth(path, selectedYear, selectedMonth);
 
     const startDate = Timestamp.fromDate(new Date(selectedYear, selectedMonth, 1));
     const endDate = Timestamp.fromDate(new Date(selectedYear, selectedMonth + 1, 0, 23, 59, 59));
@@ -64,7 +66,7 @@ export const MonthlyView: React.FC = () => {
     const exchangeRate = rate ?? 1;
 
     // Função auxiliar para extrair mês/ano de uma data
-    function getMonthYear(date: any) {
+    function getMonthYear(date: Timestamp) {
         const d = date instanceof Date
             ? date
             : date && 'seconds' in date
@@ -309,7 +311,7 @@ export const MonthlyView: React.FC = () => {
                                             });
                                             setPayingTx(null);
                                         } catch (err) {
-                                            alert('Erro ao marcar como pago');
+                                            alert(`Erro ao marcar como pago: ${err}`);
                                         }
                                     }}
                                 >
@@ -514,7 +516,7 @@ export const MonthlyView: React.FC = () => {
                                                                 expDate.getFullYear() === budgetYear
                                                             );
                                                         });
-                                                        const ok = await confirm({
+                                                        await confirm({
                                                             title: 'Deletar orçamento',
                                                             text: `Deseja deletar o orçamento "${budget.name}" e todas as transações relacionadas?`,
                                                             confirmButtonText: 'Deletar tudo',
@@ -526,8 +528,6 @@ export const MonthlyView: React.FC = () => {
                                                                 }
                                                             }
                                                         });
-                                                        ok;
-                                                        budgetsLoading;
                                                         // Não precisa de if (ok), pois a deleção já ocorre no onConfirm
                                                     }}
                                                 />
@@ -642,7 +642,7 @@ export const MonthlyView: React.FC = () => {
                                                         setPayingTx({ ...tx, paidAt: Timestamp.fromDate(new Date(new Date().toISOString().split('T')[0])) })
                                                     }}
                                                     onDelete={async () => {
-                                                        const ok = await confirm({
+                                                        await confirm({
                                                             title: 'Delete transaction',
                                                             text: `Delete "${tx.name}"?`,
                                                             confirmButtonText: 'Delete',
@@ -651,13 +651,6 @@ export const MonthlyView: React.FC = () => {
                                                             successMessage: `"${tx.name}" deleted!`,
                                                             errorMessage: `Error deleting transaction.`,
                                                         });
-                                                        if (ok) {
-                                                            try {
-                                                                await deleteDoc(doc(db, path, tx.id));
-                                                            } catch (err) {
-                                                                console.error('Error deleting transaction:', err);
-                                                            }
-                                                        }
                                                     }}
                                                 />
                                             </div>
