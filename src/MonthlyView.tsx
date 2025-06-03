@@ -13,6 +13,7 @@ import { MonthYearPicker } from './components/Layout/MonthYearPicker';
 import { useFirestoreCollection } from './hooks/useFirestoreCollection';
 import { TransactionForm } from './components/Financial/TransactionForm';
 import { TransactionOptions } from './components/Financial/TransactionOptions';
+import { PageTitle } from './components/Layout/PageTitle';
 
 export const MonthlyView: React.FC = () => {
     // const { user } = useAuth();
@@ -328,7 +329,8 @@ export const MonthlyView: React.FC = () => {
 
             {familyId !== '' &&
                 <>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Registro Mensal</h1>
+                    <PageTitle>Registro Mensal</PageTitle>
+                    {/* <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Registro Mensal</h1> */}
 
                     {/* Formulário para nova transação */}
                     <TransactionForm path={path} budgetsOfMonth={budgets} />

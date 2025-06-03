@@ -15,6 +15,8 @@ export interface ConfirmOptions {
     successMessage?: string;
     /** Mensagem de erro em caso de falha */
     errorMessage?: string;
+    /** Mostrar botão de cancelar? (padrão: true) */
+    showCancelButton?: boolean;
 }
 
 /**
@@ -31,13 +33,13 @@ export interface ConfirmOptions {
  * });
  */
 export function useConfirm() {
-    return async (options: ConfirmOptions & { onConfirm: () => Promise<any> }) => {
-        const { title, text, confirmButtonText, cancelButtonText, successMessage, errorMessage, onConfirm } = options;
+    return async (options: ConfirmOptions & { onConfirm: () => Promise<unknown> }) => {
+        const { title, text, confirmButtonText, cancelButtonText, successMessage, errorMessage, showCancelButton = true, onConfirm } = options;
         const result = await ReactSwal.fire({
             title,
             text,
             icon: 'warning',
-            showCancelButton: true,
+            showCancelButton: showCancelButton,
             confirmButtonText: confirmButtonText || 'Confirm',
             cancelButtonText: cancelButtonText || 'Cancel',
             reverseButtons: true,

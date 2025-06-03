@@ -48,7 +48,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
     return (
         <div
             className={`
-                fixed inset-0 z-50 overflow-hidden
+                fixed inset-0 h-screen z-50 overflow-hidden
                 ${open ? '' : 'pointer-events-none'}
             `}
             aria-modal="true"
@@ -62,11 +62,13 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
             {/* Drawer */}
             <aside
                 className={`
-                    relative ml-0 h-screen bg-white dark:bg-gray-900 shadow-lg transition-transform duration-300
-                    flex flex-col w-full max-w-[320px]
-                    ${open ? 'translate-x-0' : '-translate-x-full'}
+                relative ml-0 h-full bg-white dark:bg-gray-900 shadow-lg
+                transition-transform duration-300
+                flex flex-col w-full md:max-w-[320px]
+                ${open ? 'translate-x-0' : '-translate-x-full'}
+                pt-safe pb-safe
                 `}
-                style={{ minWidth: 'min(100vw,320px)' }}
+                // style={{ minWidth: 'min(100vw, 320px)' }}
             >
                 {/* Topo */}
                 <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
@@ -124,7 +126,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
                     )}
                 </nav>
                 {/* ThemeSelector no rodapé */}
-                <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex z-[9999] p-4 border-t border-gray-200 dark:border-gray-700 pb-10">
                     <ThemeSelector />
                 </div>
             </aside>

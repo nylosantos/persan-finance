@@ -2,6 +2,7 @@
 // Tipagens compartilhadas da aplicação
 
 import { Timestamp } from 'firebase/firestore';
+import { Budget } from '../hooks/useAllFamiliesBudgetsOfMonth';
 
 /**
  * Representa uma transação financeira (entrada ou saída).
@@ -21,6 +22,8 @@ export interface Transaction {
     downloadUrl?: string;
     familyId?: string;
 }
+
+export type TransactionWithoutId = Omit<Transaction, 'id'>;
 
 export interface TransactionPaymentModalProps {
     open: boolean;
@@ -47,7 +50,7 @@ export interface TransactionPaymentModalProps {
 export interface TransactionEditModalProps {
     open: boolean;
     transaction: Transaction | null;
-    budgetsOfMonth: any[]; // ou o tipo correto de budgets
+    budgetsOfMonth: Budget[]; // ou o tipo correto de budgets
     path: string;
     onClose: () => void;
     onSaved: () => void;
@@ -111,25 +114,35 @@ export interface TransactionFiltersDrawerProps extends TransactionFiltersProps {
 }
 
 export interface TransactionFormProps {
-  path: string;
-  budgetsOfMonth: Array<{
-    id: string;
-    categoryId: string;
-    date: Date | { seconds: number };
-  }>;
-  initialValues?: {
-    id?: string;
-    name?: string;
-    categoryId?: string;
-    categoryName?: string;
-    amount?: number | string;
-    date?: Date | string | { seconds: number };
-    type?: 'income' | 'expense' | 'budget';
-    currency?: 'EUR' | 'BRL';
-    createdAt?: any;
-  };
-  onClose?: () => void;
-  onSaved?: () => void;
+    path: string;
+    budgetsOfMonth: Array<{
+        id: string;
+        categoryId: string;
+        date: Date | { seconds: number };
+    }>;
+    initialValues?: {
+        id?: string;
+        name?: string;
+        categoryId?: string;
+        categoryName?: string;
+        amount?: number | string;
+        date?: Date | string | { seconds: number };
+        type?: 'income' | 'expense' | 'budget';
+        currency?: 'EUR' | 'BRL';
+        createdAt?: Timestamp;
+        paid?: boolean;
+        paidAt?: Timestamp;
+        downloadUrl?: string;
+    };
+    onClose?: () => void;
+    onSaved?: () => void;
 }
 
-export interface TransactionFormDrawerCardProps extends TransactionFormProps {}
+export interface Category {
+  id: string;
+  name: string;
+  ownerId: string;
+  scope: string;
+  createdAt: Timestamp; // Pode ser Timestamp do Firebase ou Date, ajuste conforme seu uso
+  txCount?: number; // Quantidade de transações atreladas (campo auxiliar)
+}

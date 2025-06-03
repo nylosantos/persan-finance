@@ -12,6 +12,7 @@ const pages = [
     { to: '/dashboard', label: 'Gráficos', icon: <span>📊</span> },
     { to: '/documents/personal', label: 'Documentos', icon: <span>📁</span> },
     { to: '/documents/invoices', label: 'Notas Fiscais', icon: <span>🧾</span> },
+    { to: '/categories', label: 'Editar Categorias', icon: <span>🏷️</span> },
 ];
 
 export const MenuButtonWithDrawer: React.FC = () => {

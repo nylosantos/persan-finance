@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/components/Documents/DocumentUpload.tsx
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { uploadDocument } from '../../services/documents';
 import { Timestamp } from 'firebase/firestore';
 import { useAuth } from '../../contexts/AuthContext';
 import { useParams } from 'react-router-dom';
+import { FileOrPhotoInput } from '../Layout/FileOrPhotoInput';
 
 
 export const DocumentUpload: React.FC = () => {
@@ -36,7 +38,7 @@ export const DocumentUpload: React.FC = () => {
     const [sharedWith, setSharedWith] = useState<string>('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    // const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -113,7 +115,7 @@ export const DocumentUpload: React.FC = () => {
                 /> */}
             </div>
 
-            <div className="flex flex-col md:flex-row space-x-2 md:items-center">
+            {/* <div className="flex flex-col md:flex-row space-x-2 md:items-center">
                 <div className="flex flex-col w-full">
                     <input
                         ref={fileInputRef}
@@ -132,7 +134,9 @@ export const DocumentUpload: React.FC = () => {
                         {file ? `Selecionado: ${file.name}` : 'Selecionar arquivo'}
                     </label>
                 </div>
-            </div>
+            </div> */}
+
+            <FileOrPhotoInput file={file} setFile={setFile} />
 
             {error && <p className="text-red-500">{error}</p>}
             <button

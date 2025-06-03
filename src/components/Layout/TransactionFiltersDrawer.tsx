@@ -30,7 +30,7 @@ export const TransactionFiltersDrawer: React.FC<TransactionFiltersDrawerProps> =
     return (
         <div
             className={`
-                fixed inset-0 z-50 overflow-hidden md:hidden
+                fixed inset-0 h-screen z-50 overflow-hidden md:hidden
                 ${open ? '' : 'pointer-events-none'}
             `}
             aria-modal="true"
@@ -44,7 +44,7 @@ export const TransactionFiltersDrawer: React.FC<TransactionFiltersDrawerProps> =
             {/* Drawer */}
             <aside
                 className={`
-                    relative ml-auto h-screen bg-white dark:bg-gray-900 shadow-lg transition-transform duration-300
+                    relative ml-auto h-full pt-safe bg-white dark:bg-gray-900 shadow-lg transition-transform duration-300
                     flex flex-col w-full max-w-[320px]
                     ${open ? 'translate-x-0' : 'translate-x-full'}
                 `}

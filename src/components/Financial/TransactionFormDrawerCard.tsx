@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { TransactionForm } from './TransactionForm';
-import { TransactionFormDrawerCardProps } from '../../types';
+import { TransactionFormProps } from '../../types';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 
-export const TransactionFormDrawerCard: React.FC<TransactionFormDrawerCardProps> = (props) => {
+export const TransactionFormDrawerCard: React.FC<TransactionFormProps> = (props) => {
     const [open, setOpen] = useState(false);
 
     return (

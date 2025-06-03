@@ -22,6 +22,7 @@ import { FiFilter } from 'react-icons/fi';
 import { FaFilter } from 'react-icons/fa';
 import { TransactionFormDrawerCard } from './TransactionFormDrawerCard';
 import { Container } from '../Layout/Container';
+import { PageTitle } from '../Layout/PageTitle';
 
 export const MonthlyView: React.FC = () => {
     // const { user } = useAuth();
@@ -74,7 +75,7 @@ export const MonthlyView: React.FC = () => {
     const exchangeRate = rate ?? 1;
 
     // Função auxiliar para extrair mês/ano de uma data
-    function getMonthYear(date: any) {
+    function getMonthYear(date: Timestamp) {
         const d = date instanceof Date
             ? date
             : date && 'seconds' in date
@@ -291,7 +292,7 @@ export const MonthlyView: React.FC = () => {
 
             {familyId !== '' &&
                 <>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 pb-6">Registro Mensal</h1>
+                    <PageTitle>Registro Mensal</PageTitle>
 
                     {/* Formulário para nova transação */}
                     <TransactionFormDrawerCard path={path} budgetsOfMonth={budgets} />

@@ -8,6 +8,7 @@ export interface TransactionOptionsProps {
     onPay?: () => void;
     onDelete: () => void;
     hidePay?: boolean;
+    disableDelete?: boolean;
 }
 
 export const TransactionOptions: React.FC<TransactionOptionsProps> = ({
@@ -16,6 +17,7 @@ export const TransactionOptions: React.FC<TransactionOptionsProps> = ({
     onPay,
     onDelete,
     hidePay = false,
+    disableDelete = false,
 }) => {
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
@@ -84,13 +86,13 @@ export const TransactionOptions: React.FC<TransactionOptionsProps> = ({
                             )}
                         </button>
                     )}
-                    <button
+                    {!disableDelete && <button
                         className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
                         onClick={() => { setOpen(false); onDelete(); }}
                         type="button"
                     >
                         <FiTrash2 className="mr-2" /> Deletar
-                    </button>
+                    </button>}
                 </div>
             )}
         </div>

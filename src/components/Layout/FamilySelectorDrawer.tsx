@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FamilySelectorDrawerProps, FamilySelectorMode } from '../../types';
 import { FamilyCard } from './FamilyCard';
 import { AiOutlineClose } from 'react-icons/ai';
+import Loading from './Loading';
 
 export const FamilySelectorDrawer: React.FC<FamilySelectorDrawerProps> = ({
     open,
@@ -45,7 +46,7 @@ export const FamilySelectorDrawer: React.FC<FamilySelectorDrawerProps> = ({
     return (
         <div
             className={`
-        fixed inset-0 z-50 overflow-hidden
+        fixed inset-0 h-screen z-50 overflow-hidden
         ${open ? '' : 'pointer-events-none'}
     `}
             aria-modal="true"
@@ -59,7 +60,7 @@ export const FamilySelectorDrawer: React.FC<FamilySelectorDrawerProps> = ({
             {/* Drawer */}
             <aside
                 className={`
-                    relative ml-auto h-full bg-white dark:bg-gray-900 shadow-lg transition-transform duration-300
+                    relative ml-auto h-full pt-safe bg-white dark:bg-gray-900 shadow-lg transition-transform duration-300
                     flex flex-col w-full max-w-[400px]
                     ${open ? 'translate-x-0' : 'translate-x-full'}
                 `}
@@ -94,7 +95,7 @@ export const FamilySelectorDrawer: React.FC<FamilySelectorDrawerProps> = ({
                 <div className="flex-1 overflow-y-auto p-4">
                     {mode === 'select' && (
                         loading ? (
-                            <div className="text-center text-gray-500">Carregando...</div>
+                            <Loading />
                         ) : families.length === 0 ? (
                             <div className="text-center text-gray-500">Nenhuma família encontrada.</div>
                         ) : (

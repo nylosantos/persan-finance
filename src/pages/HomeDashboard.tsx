@@ -4,11 +4,13 @@ import { useAllFamiliesMonthlyTransactions } from '../hooks/useAllFamiliesMonthl
 import { useAllFamiliesBudgetsOfMonth } from '../hooks/useAllFamiliesBudgetsOfMonth';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { MonthYearPicker } from '../components/Layout/MonthYearPicker';
-import { getDoc, doc } from 'firebase/firestore';
+import { getDoc, doc, Timestamp } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import { useExchangeRate } from '../hooks/useExchangeRate';
 import { TotalsSummary } from '../components/Layout/TotalsSummary';
 import { Container } from '../components/Layout/Container';
+import { PageTitle } from '../components/Layout/PageTitle';
+import Loading from '../components/Layout/Loading';
 
 const COLORS = ['#4ade80', '#f87171', '#60a5fa', '#fbbf24', '#a78bfa', '#f472b6', '#34d399', '#facc15', '#818cf8', '#fb7185'];
 
@@ -36,7 +38,7 @@ export const HomeDashboard: React.FC = () => {
         curr === 'EUR' ? `€${value.toFixed(2)}` : `R$${value.toFixed(2)}`;
 
     // --- Gráfico de barras: entradas/saídas por mês ---
-    function getMonthKey(date: any) {
+    function getMonthKey(date: Timestamp) {
         const d = date instanceof Date
             ? date
             : date && 'seconds' in date
@@ -71,7 +73,7 @@ export const HomeDashboard: React.FC = () => {
     const incomes = transactions.filter(tx => tx.type === 'income');
     const expenses = transactions.filter(tx => tx.type === 'expense');
 
-    function getMonthYear(date: any) {
+    function getMonthYear(date: Timestamp) {
         const d = date instanceof Date
             ? date
             : date && 'seconds' in date
@@ -237,7 +239,7 @@ export const HomeDashboard: React.FC = () => {
         // Filtra budgets dessa família
         const bds = budgets.filter(b => b.familyId === fid);
         // Mesma lógica de budgets
-        function getMonthYear(date: any) {
+        function getMonthYear(date: Timestamp) {
             const d = date instanceof Date
                 ? date
                 : date && 'seconds' in date
@@ -290,12 +292,12 @@ export const HomeDashboard: React.FC = () => {
     }).filter(f => f.value > 0);
 
     if (loadingFamilies || loadingTx || loadingBudgets) {
-        return <p>Carregando dados...</p>;
+        return <Loading />;
     }
 
     return (
         <Container>
-            <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Resumo Geral</h1>
+            <PageTitle>Resumo Geral</PageTitle>
 
             {/* Selecione o mês e ano */}
             <MonthYearPicker

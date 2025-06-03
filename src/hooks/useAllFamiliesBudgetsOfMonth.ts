@@ -8,7 +8,8 @@ export interface Budget {
     categoryId: string;
     amount: number;
     currency: 'EUR' | 'BRL';
-    date: Timestamp | { seconds: number };
+    // date: Timestamp | { seconds: number };
+    date: Timestamp;
     familyId?: string;
 }
 

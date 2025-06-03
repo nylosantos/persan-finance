@@ -8,6 +8,7 @@ import { MonthlyView } from '../components/Financial/MonthlyView';
 import { DashboardPage } from '../pages/DashboardPage';
 import { DocumentPage } from '../pages/DocumentPage';
 import { HomeDashboard } from '../pages/HomeDashboard';
+import { CategoryManager } from '../components/Categories/CategoryManager';
 // ... import outras pages quando existirem
 
 export const AppRoutes: React.FC = () => (
@@ -22,6 +23,7 @@ export const AppRoutes: React.FC = () => (
       <Route path="/monthlyView" element={<MonthlyView />} />
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/documents/:type" element={<DocumentPage />} />
+      <Route path="/categories" element={<CategoryManager />} />
     </Route>
 
     {/* Redirecionamento padrão */}
