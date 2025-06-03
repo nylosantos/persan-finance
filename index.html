@@ -1,20 +1,35 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
 
-    <!-- Importantíssimo para ocupar todo o display em PWA -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
 
-    <!-- Em iOS, faz a status bar ser translúcida -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <!-- Importantíssimo para ocupar todo o display em PWA -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-    <title>Persan Finance</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <!-- Em iOS, faz a status bar ser translúcida -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <!-- 1. Manifest PWA -->
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- 2. Ícones padrão (favicon + apple-touch-icon) -->
+  <!-- Favicon para navegadores desktop -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/pwa_icons/icon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/pwa_icons/icon-16x16.png" />
+
+  <!-- Apple Touch Icon (iOS) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/pwa_icons/icon-180x180.png" />
+
+  <!-- (Opcional) Tema de cor da barra do Chrome no Android -->
+  <meta name="theme-color" content="#F0F9FF" />
+  <title>Persan Finance</title>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

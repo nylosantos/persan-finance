@@ -61,15 +61,15 @@ export const FamilySelectorDrawer: React.FC<FamilySelectorDrawerProps> = ({
             <aside
                 className={`
                     relative ml-auto h-full pt-safe bg-white dark:bg-gray-900 shadow-lg transition-transform duration-300
-                    flex flex-col w-full max-w-[400px]
+                    flex flex-col w-full md:max-w-[400px]
                     ${open ? 'translate-x-0' : 'translate-x-full'}
                 `}
-                style={{ minWidth: 'min(100vw,400px)' }}
+                // style={{ minWidth: 'min(100vw,400px)' }}
             >
                 {/* Topo */}
-                <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Famílias</h2>
-                    <button onClick={onClose} className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">
+                <div className="flex items-center justify-between py-4 border-b border-gray-200 dark:border-gray-700">
+                    <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 px-4">Famílias</h2>
+                    <button onClick={onClose} className="py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">
                         <AiOutlineClose size={20} />
                     </button>
                 </div>
