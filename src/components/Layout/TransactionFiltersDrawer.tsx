@@ -44,7 +44,7 @@ export const TransactionFiltersDrawer: React.FC<TransactionFiltersDrawerProps> =
             {/* Drawer */}
             <aside
                 className={`
-                    relative ml-0 h-full pt-safe bg-white dark:bg-gray-900 shadow-lg transition-transform duration-300
+                    relative ml-0 h-full pt-safe bg-gray-100 dark:bg-gray-900 shadow-lg transition-transform duration-300
                     flex flex-col w-full md:max-w-[320px]
                     ${open ? 'translate-x-0' : 'translate-x-full'}
                 `}

@@ -60,7 +60,7 @@ export const FamilySelectorDrawer: React.FC<FamilySelectorDrawerProps> = ({
             {/* Drawer */}
             <aside
                 className={`
-                    relative ml-auto h-full pt-safe bg-white dark:bg-gray-900 shadow-lg transition-transform duration-300
+                    relative ml-auto h-full pt-safe bg-gray-100 dark:bg-gray-900 shadow-lg transition-transform duration-300
                     flex flex-col w-full md:max-w-[400px]
                     ${open ? 'translate-x-0' : 'translate-x-full'}
                 `}

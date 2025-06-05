@@ -62,7 +62,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({
             {/* Drawer */}
             <aside
                 className={`
-                relative ml-0 h-full bg-white dark:bg-gray-900 shadow-lg
+                relative ml-0 h-full bg-gray-100 dark:bg-gray-900 shadow-lg
                 transition-transform duration-300
                 flex flex-col w-full md:max-w-[320px]
                 ${open ? 'translate-x-0' : '-translate-x-full'}
